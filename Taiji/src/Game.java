@@ -4,11 +4,17 @@ public class Game {
     private final Board board;
     private final Scanner scanner;
     private int currentPlayer; // 1 = Black, 2 = White
+    private final AI ai;
+    private final int aiPlayer;
+    private final int aiDepth;
 
-    public Game(int boardSize, Scanner scanner) {
+    public Game(int boardSize, Scanner scanner, int aiPlayer, int aiDepth) {
         this.board = new Board(boardSize);
         this.scanner = scanner;
         this.currentPlayer = 1;
+        this.ai = new AI();
+        this.aiPlayer = aiPlayer;
+        this.aiDepth = aiDepth;
     }
 
     public void run() {
@@ -20,16 +26,32 @@ public class Game {
         while (!board.isFull()) {
             board.print();
             printScores();
-            System.out.printf("\nPlayer %d's turn (%s)\n",
-                currentPlayer, currentPlayer == 1 ? "prefers Black" : "prefers White");
-            System.out.println("Place a domino. Input format: row1 col1 row2 col2 firstColor");
-            System.out.println("  firstColor: B = Black on (row1,col1), W = White on (row1,col1)");
-            System.out.println("  (row2,col2) must be adjacent to (row1,col1)");
-            System.out.print("> ");
 
-            if (!readAndPlace()) {
-                System.out.println("Invalid placement. Try again.\n");
-                continue;
+            if (currentPlayer == aiPlayer) {
+                System.out.println("\nAI is thinking...");
+                long start = System.currentTimeMillis();
+                Board next = ai.getBestMove(board, aiDepth, aiPlayer);
+                if (next == null){
+                    break;
+                }
+                board.copyFrom(next);
+                long elapsed = System.currentTimeMillis() - start;
+                System.out.println("AI placed its domino");
+                System.out.println("Elapsed time: " + String.format("%d.%03d", elapsed / 1000, elapsed % 1000) + "s");
+
+            } else {
+
+                System.out.printf("\nPlayer %d's turn (%s)\n",
+                    currentPlayer, currentPlayer == 1 ? "prefers Black" : "prefers White");
+                System.out.println("Place a domino. Input format: row1 col1 row2 col2 firstColor");
+                System.out.println("  firstColor: B = Black on (row1,col1), W = White on (row1,col1)");
+                System.out.println("  (row2,col2) must be adjacent to (row1,col1)");
+                System.out.print("> ");
+
+                if (!readAndPlace()) {
+                    System.out.println("Invalid placement. Try again.\n");
+                    continue;
+                }
             }
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;

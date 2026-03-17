@@ -23,6 +23,12 @@ public class Board {
 
     public int getSize() { return size; }
 
+    public void copyFrom(Board other) {
+        for (int r = 0; r < size; r++){
+            this.grid[r] = Arrays.copyOf(other.grid[r], size);
+        }
+    }
+
     public Cell get(int row, int col) { return grid[row][col]; }
 
     public boolean inBounds(int row, int col) {
