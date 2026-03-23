@@ -34,9 +34,9 @@ public class AI {
         int emptyCells = board.countCells(Board.Cell.EMPTY);
         double fillRatio = 1.0 - (double) emptyCells / totalCells;
 
-        if (fillRatio < 0.25) return 3;
-        if (fillRatio < 0.50) return 5;
-        if (fillRatio < 0.75) return 7;
+        if (fillRatio < 0.6) return 3;
+        if (fillRatio < 0.8) return 4;
+        if (fillRatio < 0.85) return 5;
         return emptyCells / 2; 
     }
 
