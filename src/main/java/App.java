@@ -31,13 +31,15 @@ public class App {
                 }
             }
 
-            System.out.print("Play against AI? (y/n): ");
-            String aiChoice = sc.nextLine().trim().toLowerCase();
+            System.out.print("Mode: (1) Human vs AI  (2) AI vs AI  (3) Human vs Human: ");
+            String modeChoice = sc.nextLine().trim();
             int aiPlayer = 0;
-            if (aiChoice.equals("y")) {
+            if (modeChoice.equals("1")) {
                 System.out.print("AI plays as player 1 (Black) or 2 (White)? (1/2): ");
                 String playerChoice = sc.nextLine().trim();
                 aiPlayer = playerChoice.equals("1") ? 1 : 2;
+            } else if (modeChoice.equals("2")) {
+                aiPlayer = 3; // both players are AI
             }
 
             Game game = new Game(boardSize, sc, aiPlayer);

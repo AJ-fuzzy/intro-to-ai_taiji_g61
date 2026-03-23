@@ -24,16 +24,16 @@ public class Game {
             board.print();
             printScores();
 
-            if (currentPlayer == aiPlayer) {
-                System.out.println("\nAI is thinking...");
+            if (aiPlayer == 3 || currentPlayer == aiPlayer) {
+                System.out.printf("\nAI (Player %d) is thinking...\n", currentPlayer);
                 long start = System.currentTimeMillis();
-                Board next = ai.getBestMove(board, aiPlayer);
+                Board next = ai.getBestMove(board, currentPlayer);
                 if (next == null){
                     break;
                 }
                 board.copyFrom(next);
                 long elapsed = System.currentTimeMillis() - start;
-                System.out.println("AI placed its domino");
+                System.out.printf("AI (Player %d) placed its domino\n", currentPlayer);
                 System.out.println("Elapsed time: " + String.format("%d.%03d", elapsed / 1000, elapsed % 1000) + "s");
 
             } else {
