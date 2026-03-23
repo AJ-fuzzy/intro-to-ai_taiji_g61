@@ -145,4 +145,15 @@ public class Board {
         System.out.print("   ");
         System.out.println("---".repeat(size));
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                sb.append(grid[r][c].ordinal());
+            }
+        }
+        return sb.toString();
+    }
 }
