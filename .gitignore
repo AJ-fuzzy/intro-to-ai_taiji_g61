@@ -1,0 +1,60 @@
+# =========================
+# Build output
+# =========================
+target/
+out/
+bin/
+build/
+
+# Compiled classes
+*.class
+
+# Logs
+*.log
+
+# =========================
+# IDE - IntelliJ
+# =========================
+.idea/
+*.iml
+
+# (Optional: keep shared run configs if you want)
+# !.idea/runConfigurations/
+
+# =========================
+# IDE - VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Maven wrapper (keep these if you use wrapper)
+# =========================
+# Uncomment if using Maven Wrapper
+# .mvn/
+# mvnw
+# mvnw.cmd
+
+# =========================
+# Local libraries (OLD STYLE)
+# =========================
+lib/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.swp
+*.swo
+*~
+
+# =========================
+# Test / coverage output
+# =========================
+coverage/
+*.exec
