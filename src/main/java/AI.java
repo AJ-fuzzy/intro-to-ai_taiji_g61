@@ -29,6 +29,7 @@ public class AI {
         Board best = null;
         int maxEval = Integer.MIN_VALUE;
         for (Board child : children) {
+            // Starting recursive search, assuming the opponent will play optimally to stop us
             int eval = minimax(child, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, aiPlayer);
             if (eval > maxEval) {
                 maxEval = eval;
@@ -38,7 +39,7 @@ public class AI {
         return best;
     }
 
-
+    // Minimax with alpha-beta pruning
     private int minimax(Board position, int depth, boolean maximizingPlayer, int alpha, int beta, int aiPlayer) {
         if (depth == 0 || position.isFull())
             return evaluate(position, aiPlayer);
@@ -47,7 +48,7 @@ public class AI {
         if (maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Board child : children){
-                maxEval = Math.max(maxEval, minimax(child, depth - 1, false, alpha, beta, aiPlayer));
+                maxEval = Math.max(maxEval, minimax(child, depth - 1, false, alpha, beta, aiPlayer)); // Pruning because move is good so opponent will not allow us to reach it anyways
                 alpha = Math.max(alpha, maxEval);
                 if(beta <= alpha){
                     break;
@@ -58,7 +59,7 @@ public class AI {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (Board child : children){
-                minEval = Math.min(minEval, minimax(child, depth - 1, true, alpha, beta, aiPlayer));
+                minEval = Math.min(minEval, minimax(child, depth - 1, true, alpha, beta, aiPlayer)); // Pruning becasuse move is bad so we dont need to evaluate the rest of the tree
                 beta = Math.min(beta,minEval);
                 if(beta <= alpha){
                 break;
@@ -67,57 +68,13 @@ public class AI {
             return minEval;
         }
     }
-
+    
+    // Simple heuristic: difference in largest groups
     private int evaluate(Board board, int aiPlayer) {
         if (aiPlayer == 2){
             return board.largestGroup(Board.Cell.WHITE) - board.largestGroup(Board.Cell.BLACK);
         } else {
             return board.largestGroup(Board.Cell.BLACK) - board.largestGroup(Board.Cell.WHITE);
-        }
-    }
-
-    //Visual AID!
-    public void printTree(Board position, int depth, int aiPlayer) {
-        minimaxDebug(position, depth, true, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, aiPlayer);
-    }
-
-    private int minimaxDebug(Board position, int depth, boolean maximizingPlayer, int alpha, int beta, int indent, int aiPlayer) {
-        String pad = "  ".repeat(indent);
-        String player = maximizingPlayer ? "MAX" : "MIN";
-
-        if (depth == 0 || position.isFull()) {
-            int score = evaluate(position, aiPlayer);
-            System.out.println(pad + "[" + player + "] LEAF score=" + score);
-            return score;
-        }
-
-        List<Board> children = getChildren(position);
-        System.out.println(pad + "[" + player + "] alpha=" + alpha + " beta=" + beta + " children=" + children.size());
-
-        if (maximizingPlayer) {
-            int maxEval = Integer.MIN_VALUE;
-            for (int i = 0; i < children.size(); i++) {
-                System.out.println(pad + "  child " + i + ":");
-                maxEval = Math.max(maxEval, minimaxDebug(children.get(i), depth - 1, false, alpha, beta, indent + 2, aiPlayer));
-                alpha = Math.max(alpha, maxEval);
-                if (beta <= alpha) {
-                    System.out.println(pad + "  *** PRUNED remaining " + (children.size() - i - 1) + " children (beta=" + beta + " <= alpha=" + alpha + ") ***");
-                    break;
-                }
-            }
-            return maxEval;
-        } else {
-            int minEval = Integer.MAX_VALUE;
-            for (int i = 0; i < children.size(); i++) {
-                System.out.println(pad + "  child " + i + ":");
-                minEval = Math.min(minEval, minimaxDebug(children.get(i), depth - 1, true, alpha, beta, indent + 2, aiPlayer));
-                beta = Math.min(beta, minEval);
-                if (beta <= alpha) {
-                    System.out.println(pad + "  *** PRUNED remaining " + (children.size() - i - 1) + " children (beta=" + beta + " <= alpha=" + alpha + ") ***");
-                    break;
-                }
-            }
-            return minEval;
         }
     }
 }
