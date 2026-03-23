@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Board {
     public enum Cell { EMPTY, BLACK, WHITE }
@@ -53,6 +55,27 @@ public class Board {
             for (Cell c : row)
                 if (c == Cell.EMPTY) return false;
         return true;
+    }
+
+    /** Returns true if no domino can be placed (no two adjacent empty cells exist). */
+    public boolean hasNoMoves() {
+        int[] dr = {0, 1};
+        int[] dc = {1, 0};
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if (grid[r][c] != Cell.EMPTY) continue;
+                for (int d = 0; d < 2; d++) {
+                    int nr = r + dr[d];
+                    int nc = c + dc[d];
+                    if (inBounds(nr, nc) && grid[nr][nc] == Cell.EMPTY) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isGameOver() {
+        return isFull() || hasNoMoves();
     }
 
     /** Returns the size of the largest connected group for the given color. */
