@@ -23,7 +23,7 @@ public class Game {
         System.out.println("Each domino has one Black half and one White half.");
         System.out.println("At the end, the largest connected group of your color wins.\n");
 
-        while (!board.isFull()) {
+        while (!board.isGameOver()) {
             board.print();
             printScores();
 
