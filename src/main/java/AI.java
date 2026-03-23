@@ -24,12 +24,24 @@ public class AI {
         return children;
     }
 
-    public Board getBestMove(Board position, int depth, int aiPlayer) {
+    private int dynamicDepth(Board board) {
+        int totalCells = board.getSize() * board.getSize();
+        int emptyCells = board.countCells(Board.Cell.EMPTY);
+        double fillRatio = 1.0 - (double) emptyCells / totalCells;
+
+        if (fillRatio < 0.25) return 3;
+        if (fillRatio < 0.50) return 5;
+        if (fillRatio < 0.75) return 7;
+        return emptyCells / 2; // endgame: search entire remaining tree
+    }
+
+    public Board getBestMove(Board position, int aiPlayer) {
+        int depth = dynamicDepth(position);
+        System.out.println("Search depth: " + depth);
         List<Board> children = getChildren(position);
         Board best = null;
         int maxEval = Integer.MIN_VALUE;
         for (Board child : children) {
-            // Starting recursive search, assuming the opponent will play optimally to stop us
             int eval = minimax(child, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, aiPlayer);
             if (eval > maxEval) {
                 maxEval = eval;

@@ -6,15 +6,12 @@ public class Game {
     private int currentPlayer; // 1 = Black, 2 = White
     private final AI ai;
     private final int aiPlayer;
-    private final int aiDepth;
-
-    public Game(int boardSize, Scanner scanner, int aiPlayer, int aiDepth) {
+    public Game(int boardSize, Scanner scanner, int aiPlayer) {
         this.board = new Board(boardSize);
         this.scanner = scanner;
         this.currentPlayer = 1;
         this.ai = new AI();
         this.aiPlayer = aiPlayer;
-        this.aiDepth = aiDepth;
     }
 
     public void run() {
@@ -30,7 +27,7 @@ public class Game {
             if (currentPlayer == aiPlayer) {
                 System.out.println("\nAI is thinking...");
                 long start = System.currentTimeMillis();
-                Board next = ai.getBestMove(board, aiDepth, aiPlayer);
+                Board next = ai.getBestMove(board, aiPlayer);
                 if (next == null){
                     break;
                 }

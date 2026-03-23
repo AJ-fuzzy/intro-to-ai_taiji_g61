@@ -34,16 +34,13 @@ public class App {
             System.out.print("Play against AI? (y/n): ");
             String aiChoice = sc.nextLine().trim().toLowerCase();
             int aiPlayer = 0;
-            int aiDepth = 3;
             if (aiChoice.equals("y")) {
                 System.out.print("AI plays as player 1 (Black) or 2 (White)? (1/2): ");
                 String playerChoice = sc.nextLine().trim();
                 aiPlayer = playerChoice.equals("1") ? 1 : 2;
-                System.out.print("AI depth (recommended 3-5, higher = slower): ");
-                try { aiDepth = Integer.parseInt(sc.nextLine().trim()); } catch (NumberFormatException e) {}
             }
 
-            Game game = new Game(boardSize, sc, aiPlayer, aiDepth);
+            Game game = new Game(boardSize, sc, aiPlayer);
             game.run();
         }
     }
