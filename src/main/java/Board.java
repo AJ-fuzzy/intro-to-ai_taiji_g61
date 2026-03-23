@@ -114,6 +114,73 @@ public class Board {
         return count;
     }
 
+    /** Empty cells adjacent to color cells — measures growth potential. */
+    public int expansionFrontier(Cell color) {
+        boolean[][] counted = new boolean[size][size];
+        int[] dr = {-1, 1, 0, 0}, dc = {0, 0, -1, 1};
+        int count = 0;
+        for (int r = 0; r < size; r++)
+            for (int c = 0; c < size; c++)
+                if (grid[r][c] == color)
+                    for (int d = 0; d < 4; d++) {
+                        int nr = r + dr[d], nc = c + dc[d];
+                        if (inBounds(nr, nc) && grid[nr][nc] == Cell.EMPTY && !counted[nr][nc]) {
+                            counted[nr][nc] = true;
+                            count++;
+                        }
+                    }
+        return count;
+    }
+
+    /** Sum of group_size^2 — rewards having one large group over many small ones. */
+    public int weightedConnectivity(Cell color) {
+        boolean[][] visited = new boolean[size][size];
+        int sum = 0;
+        for (int r = 0; r < size; r++)
+            for (int c = 0; c < size; c++)
+                if (!visited[r][c] && grid[r][c] == color) {
+                    int gs = bfs(r, c, color, visited);
+                    sum += gs * gs;
+                }
+        return sum;
+    }
+
+    /** Sum of centrality weights — cells closer to center score higher. */
+    public int centralityScore(Cell color) {
+        int center = size / 2;
+        int score = 0;
+        for (int r = 0; r < size; r++)
+            for (int c = 0; c < size; c++)
+                if (grid[r][c] == color)
+                    score += (size - Math.abs(r - center) - Math.abs(c - center));
+        return score;
+    }
+
+    /** Empty cells adjacent to myColor but NOT adjacent to oppColor — exclusively owned space. */
+    public int influence(Cell myColor, Cell oppColor) {
+        boolean[][] myFrontier = new boolean[size][size];
+        boolean[][] oppFrontier = new boolean[size][size];
+        int[] dr = {-1, 1, 0, 0}, dc = {0, 0, -1, 1};
+        for (int r = 0; r < size; r++)
+            for (int c = 0; c < size; c++) {
+                if (grid[r][c] == myColor)
+                    for (int d = 0; d < 4; d++) {
+                        int nr = r + dr[d], nc = c + dc[d];
+                        if (inBounds(nr, nc) && grid[nr][nc] == Cell.EMPTY) myFrontier[nr][nc] = true;
+                    }
+                if (grid[r][c] == oppColor)
+                    for (int d = 0; d < 4; d++) {
+                        int nr = r + dr[d], nc = c + dc[d];
+                        if (inBounds(nr, nc) && grid[nr][nc] == Cell.EMPTY) oppFrontier[nr][nc] = true;
+                    }
+            }
+        int count = 0;
+        for (int r = 0; r < size; r++)
+            for (int c = 0; c < size; c++)
+                if (myFrontier[r][c] && !oppFrontier[r][c]) count++;
+        return count;
+    }
+
     /** Count total cells of a given color. */
     public int countCells(Cell color) {
         int count = 0;

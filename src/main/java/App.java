@@ -33,17 +33,32 @@ public class App {
 
             System.out.print("Mode: (1) Human vs AI  (2) AI vs AI  (3) Human vs Human: ");
             String modeChoice = sc.nextLine().trim();
-            int aiPlayer = 0;
+
+            AI ai1 = null, ai2 = null;
             if (modeChoice.equals("1")) {
                 System.out.print("AI plays as player 1 (Black) or 2 (White)? (1/2): ");
                 String playerChoice = sc.nextLine().trim();
-                aiPlayer = playerChoice.equals("1") ? 1 : 2;
+                AI aiInstance = new AI(pickHeuristic(sc, "AI"));
+                if (playerChoice.equals("1")) ai1 = aiInstance;
+                else                          ai2 = aiInstance;
             } else if (modeChoice.equals("2")) {
-                aiPlayer = 3; // both players are AI
+                ai1 = new AI(pickHeuristic(sc, "Player 1 AI"));
+                ai2 = new AI(pickHeuristic(sc, "Player 2 AI"));
             }
 
-            Game game = new Game(boardSize, sc, aiPlayer);
+            Game game = new Game(boardSize, sc, ai1, ai2);
             game.run();
         }
+    }
+
+    private static HeuristicConfig pickHeuristic(java.util.Scanner sc, String label) {
+        System.out.println(label + " heuristic:");
+        HeuristicConfig.printMenu();
+        System.out.print("  Choice (default 1): ");
+        int choice = 1;
+        try { choice = Integer.parseInt(sc.nextLine().trim()); } catch (NumberFormatException e) {}
+        HeuristicConfig cfg = HeuristicConfig.fromChoice(choice);
+        System.out.println("  -> " + cfg.name);
+        return cfg;
     }
 }

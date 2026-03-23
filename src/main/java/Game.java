@@ -4,14 +4,15 @@ public class Game {
     private final Board board;
     private final Scanner scanner;
     private int currentPlayer; // 1 = Black, 2 = White
-    private final AI ai;
-    private final int aiPlayer;
-    public Game(int boardSize, Scanner scanner, int aiPlayer) {
+    private final AI ai1; // null = human plays as player 1
+    private final AI ai2; // null = human plays as player 2
+
+    public Game(int boardSize, Scanner scanner, AI ai1, AI ai2) {
         this.board = new Board(boardSize);
         this.scanner = scanner;
         this.currentPlayer = 1;
-        this.ai = new AI();
-        this.aiPlayer = aiPlayer;
+        this.ai1 = ai1;
+        this.ai2 = ai2;
     }
 
     public void run() {
@@ -24,10 +25,11 @@ public class Game {
             board.print();
             printScores();
 
-            if (aiPlayer == 3 || currentPlayer == aiPlayer) {
+            AI currentAI = currentPlayer == 1 ? ai1 : ai2;
+            if (currentAI != null) {
                 System.out.printf("\nAI (Player %d) is thinking...\n", currentPlayer);
                 long start = System.currentTimeMillis();
-                Board next = ai.getBestMove(board, currentPlayer);
+                Board next = currentAI.getBestMove(board, currentPlayer);
                 if (next == null){
                     break;
                 }

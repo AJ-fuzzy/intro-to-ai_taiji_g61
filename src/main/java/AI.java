@@ -1,12 +1,16 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AI {
 
-    // Cache to store evaluated board states
+    private final HeuristicConfig config;
     private final Map<String, Integer> memo = new HashMap<>();
+
+    public AI(HeuristicConfig config) {
+        this.config = config;
+    }
 
     public List<Board> getChildren(Board position) {
         List<Board> children = new ArrayList<>();
@@ -53,7 +57,7 @@ public class AI {
         int maxEval = Integer.MIN_VALUE;
         for (Board child : children) {
             int eval = minimax(child, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, aiPlayer);
-            if (eval > maxEval) {
+            if (eval >= maxEval) {
                 maxEval = eval;
                 best = child;
             }
@@ -104,10 +108,15 @@ public class AI {
     }
     
     private int evaluate(Board board, int aiPlayer) {
-        if (aiPlayer == 2){
-            return board.largestGroup(Board.Cell.WHITE) - board.largestGroup(Board.Cell.BLACK);
-        } else {
-            return board.largestGroup(Board.Cell.BLACK) - board.largestGroup(Board.Cell.WHITE);
-        }
+        Board.Cell my  = aiPlayer == 2 ? Board.Cell.WHITE : Board.Cell.BLACK;
+        Board.Cell opp = aiPlayer == 2 ? Board.Cell.BLACK : Board.Cell.WHITE;
+
+        double score = 0;
+        score += config.largestGroup  * (board.largestGroup(my)         - board.largestGroup(opp));
+        score += config.weightedConn  * (board.weightedConnectivity(my) - board.weightedConnectivity(opp));
+        score += config.mobility      * (board.expansionFrontier(my)    - board.expansionFrontier(opp));
+        score += config.centrality    * board.centralityScore(my);
+        score += config.blocking      * board.influence(my, opp);
+        return (int) score; 
     }
 }
