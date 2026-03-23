@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+// Initializes the game, handles user input for settings, and starts the game loop
 public class App {
     public static void main(String[] args) {
         int boardSize = 7;
@@ -30,7 +31,8 @@ public class App {
                     }
                 }
             }
-
+            
+            // --- AI configuration ---
             System.out.print("Play against AI? (y/n): ");
             String aiChoice = sc.nextLine().trim().toLowerCase();
             int aiPlayer = 0;

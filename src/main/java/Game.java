@@ -11,12 +11,13 @@ public class Game {
     public Game(int boardSize, Scanner scanner, int aiPlayer, int aiDepth) {
         this.board = new Board(boardSize);
         this.scanner = scanner;
-        this.currentPlayer = 1;
+        this.currentPlayer = 1; // Black goes first
         this.ai = new AI();
         this.aiPlayer = aiPlayer;
         this.aiDepth = aiDepth;
     }
 
+    // Main game loop
     public void run() {
         System.out.println("=== TAIJI ===");
         System.out.println("Players alternate placing a domino (1x2 tile).");
@@ -56,11 +57,12 @@ public class Game {
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
-
+        // final state and result
         board.print();
         printFinalResult();
     }
 
+    // Parsing input and placing a domino for the human player
     private boolean readAndPlace() {
         try {
             String line = scanner.nextLine().trim();
@@ -99,6 +101,7 @@ public class Game {
         }
     }
 
+    // Place domino for AI
     public boolean placeFromAI(int r1, int c1, int r2, int c2, String colorStr) {
         Board.Cell color1, color2;
         if (colorStr.equals("B")) {

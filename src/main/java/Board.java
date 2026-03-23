@@ -15,7 +15,7 @@ public class Board {
             Arrays.fill(row, Cell.EMPTY);
     }
 
-    /** Copy constructor — deep-copies the grid state. */
+    // Copy constructor - deep-copies the grid state, essential for AI search
     public Board(Board other) {
         this.size = other.size;
         this.grid = new Cell[size][size];
@@ -37,7 +37,7 @@ public class Board {
         return row >= 0 && row < size && col >= 0 && col < size;
     }
 
-    /** Place a domino. Returns false if placement is invalid. */
+    // Place a domino. Returns false if placement is invalid
     public boolean placeDomino(int r1, int c1, Cell color1, int r2, int c2, Cell color2) {
         if (!inBounds(r1, c1) || !inBounds(r2, c2)) return false;
         if (grid[r1][c1] != Cell.EMPTY || grid[r2][c2] != Cell.EMPTY) return false;
@@ -49,7 +49,7 @@ public class Board {
         grid[r2][c2] = color2;
         return true;
     }
-
+    // Check if any space for a domino placement exists
     public boolean isFull() {
         for (Cell[] row : grid)
             for (Cell c : row)
@@ -77,7 +77,7 @@ public class Board {
         return isFull() || hasNoMoves();
     }
 
-    /** Returns the size of the largest connected group for the given color. */
+    // Returns the size of the largest connected group for the given color
     public int largestGroup(Cell color) {
         boolean[][] visited = new boolean[size][size];
         int max = 0;
@@ -92,6 +92,7 @@ public class Board {
         return max;
     }
 
+    // BFS to count the size of a connected group of the same color, marking visited cells
     private int bfs(int startR, int startC, Cell color, boolean[][] visited) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
@@ -114,7 +115,7 @@ public class Board {
         return count;
     }
 
-    /** Count total cells of a given color. */
+    // Count total cells of a given color (for tiebreaking)
     public int countCells(Cell color) {
         int count = 0;
         for (Cell[] row : grid)
@@ -123,6 +124,7 @@ public class Board {
         return count;
     }
 
+    // Visualize the board state
     public void print() {
         System.out.print("   ");
         for (int c = 0; c < size; c++)
