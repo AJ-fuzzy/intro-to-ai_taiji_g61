@@ -57,7 +57,6 @@ public class Board {
         return true;
     }
 
-    /** Returns true if no domino can be placed (no two adjacent empty cells exist). */
     public boolean hasNoMoves() {
         int[] dr = {0, 1};
         int[] dc = {1, 0};
